@@ -46,6 +46,10 @@ model User {
   phone       String?
   department  String?
   designation String?
+  bankAccountNumber String?
+  bankName    String?
+  ifscCode    String?
+  accountHolderName String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

@@ -9,6 +9,10 @@ interface User {
   phone?: string;
   department?: string;
   designation?: string;
+  bankAccountNumber?: string;
+  bankName?: string;
+  ifscCode?: string;
+  accountHolderName?: string;
 }
 
 interface AuthContextType {

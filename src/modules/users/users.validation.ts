@@ -30,6 +30,10 @@ export const updateUserSchema = z.object({
     phone: z.string().optional(),
     department: z.string().optional(),
     designation: z.string().optional(),
+    bankAccountNumber: z.string().optional(),
+    bankName: z.string().optional(),
+    ifscCode: z.string().optional(),
+    accountHolderName: z.string().optional(),
   }),
 });
 

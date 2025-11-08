@@ -21,6 +21,10 @@ interface UpdateUserInput {
   phone?: string;
   department?: string;
   designation?: string;
+  bankAccountNumber?: string;
+  bankName?: string;
+  ifscCode?: string;
+  accountHolderName?: string;
 }
 
 /**
@@ -41,6 +45,10 @@ export const getAllUsers = async (page: number = 1, limit: number = 10) => {
         phone: true,
         department: true,
         designation: true,
+        bankAccountNumber: true,
+        bankName: true,
+        ifscCode: true,
+        accountHolderName: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -76,6 +84,10 @@ export const getUserById = async (userId: string) => {
       phone: true,
       department: true,
       designation: true,
+      bankAccountNumber: true,
+      bankName: true,
+      ifscCode: true,
+      accountHolderName: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -136,7 +148,7 @@ export const createUser = async (input: CreateUserInput) => {
  * Update user (Admin only or self)
  */
 export const updateUser = async (userId: string, input: UpdateUserInput) => {
-  const { name, email, password, role, phone, department, designation } = input;
+  const { name, email, password, role, phone, department, designation, bankAccountNumber, bankName, ifscCode, accountHolderName } = input;
 
   // Check if user exists
   const existingUser = await prisma.user.findUnique({
@@ -166,6 +178,10 @@ export const updateUser = async (userId: string, input: UpdateUserInput) => {
   if (phone !== undefined) updateData.phone = phone;
   if (department !== undefined) updateData.department = department;
   if (designation !== undefined) updateData.designation = designation;
+  if (bankAccountNumber !== undefined) updateData.bankAccountNumber = bankAccountNumber;
+  if (bankName !== undefined) updateData.bankName = bankName;
+  if (ifscCode !== undefined) updateData.ifscCode = ifscCode;
+  if (accountHolderName !== undefined) updateData.accountHolderName = accountHolderName;
 
   // Hash password if provided
   if (password) {
@@ -176,16 +192,20 @@ export const updateUser = async (userId: string, input: UpdateUserInput) => {
   const user = await prisma.user.update({
     where: { id: userId },
     data: updateData,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      phone: true,
-      department: true,
-      designation: true,
-      updatedAt: true,
-    },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        phone: true,
+        department: true,
+        designation: true,
+        bankAccountNumber: true,
+        bankName: true,
+        ifscCode: true,
+        accountHolderName: true,
+        updatedAt: true,
+      },
   });
 
   return user;

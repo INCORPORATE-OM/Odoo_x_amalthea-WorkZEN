@@ -158,7 +158,11 @@ export const getAllEmployeesAttendance = async (
   limit: number = 10
 ) => {
   const skip = (page - 1) * limit;
-  const targetDate = date || new Date();
+  let targetDate = date || new Date();
+  
+  // Normalize date to start of day (remove time component) for proper comparison
+  targetDate = new Date(targetDate);
+  targetDate.setHours(0, 0, 0, 0);
 
   const [attendances, total] = await Promise.all([
     prisma.attendance.findMany({

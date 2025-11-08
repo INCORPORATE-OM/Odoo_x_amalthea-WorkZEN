@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { Layout } from '../components/Layout';
 
 export const Attendance = () => {
-  const { user } = useAuth();
   const [attendance, setAttendance] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [checkInLoading, setCheckInLoading] = useState(false);

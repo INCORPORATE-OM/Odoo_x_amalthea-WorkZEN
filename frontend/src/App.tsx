@@ -10,6 +10,8 @@ import { Leaves } from './pages/Leaves';
 import { Payroll } from './pages/Payroll';
 import { Users } from './pages/Users';
 import { Profile } from './pages/Profile';
+import { Reports } from './pages/Reports';
+import { Settings } from './pages/Settings';
 
 const AppRoutes = () => {
   const { user, loading } = useAuth();
@@ -85,6 +87,22 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'hr_officer', 'payroll_officer']}>
+            <Reports />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'hr_officer', 'payroll_officer']}>
+            <Settings />
           </ProtectedRoute>
         }
       />

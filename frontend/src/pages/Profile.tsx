@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { Layout } from '../components/Layout';
+import { LeaveCalendar } from '../components/LeaveCalendar';
 
 export const Profile = () => {
   const { user, refreshUser } = useAuth();
@@ -25,6 +26,10 @@ export const Profile = () => {
         department: user.department || '',
         designation: user.designation || '',
         role: user.role || '',
+        bankAccountNumber: user.bankAccountNumber || '',
+        bankName: user.bankName || '',
+        ifscCode: user.ifscCode || '',
+        accountHolderName: user.accountHolderName || '',
       });
     }
   }, [user]);
@@ -45,6 +50,10 @@ export const Profile = () => {
         phone: profileData.phone,
         department: profileData.department,
         designation: profileData.designation,
+        bankAccountNumber: profileData.bankAccountNumber,
+        bankName: profileData.bankName,
+        ifscCode: profileData.ifscCode,
+        accountHolderName: profileData.accountHolderName,
       });
       await refreshUser();
       alert('Profile updated successfully!');
@@ -57,8 +66,8 @@ export const Profile = () => {
 
   return (
     <Layout>
-      <div className="p-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">My Profile</h1>
+      <div className="p-6 pb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">My Profile</h1>
 
         <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -169,6 +178,64 @@ export const Profile = () => {
               </div>
             </div>
 
+            {/* Bank Account Details Section */}
+            <div className="pt-6 border-t">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Bank Account Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Account Holder Name
+                  </label>
+                  <input
+                    type="text"
+                    name="accountHolderName"
+                    value={profileData.accountHolderName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bank Name
+                  </label>
+                  <input
+                    type="text"
+                    name="bankName"
+                    value={profileData.bankName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Account Number
+                  </label>
+                  <input
+                    type="text"
+                    name="bankAccountNumber"
+                    value={profileData.bankAccountNumber}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    IFSC Code
+                  </label>
+                  <input
+                    type="text"
+                    name="ifscCode"
+                    value={profileData.ifscCode}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Action Buttons */}
             <div className="flex justify-end space-x-4 pt-6 border-t">
               <button
@@ -182,6 +249,10 @@ export const Profile = () => {
                       department: user.department || '',
                       designation: user.designation || '',
                       role: user.role || '',
+                      bankAccountNumber: user.bankAccountNumber || '',
+                      bankName: user.bankName || '',
+                      ifscCode: user.ifscCode || '',
+                      accountHolderName: user.accountHolderName || '',
                     });
                   }
                 }}
@@ -198,6 +269,11 @@ export const Profile = () => {
               </button>
             </div>
           </form>
+        </div>
+
+        {/* Leave Calendar Section */}
+        <div className="mt-6">
+          <LeaveCalendar title="My Leave Calendar" />
         </div>
       </div>
     </Layout>

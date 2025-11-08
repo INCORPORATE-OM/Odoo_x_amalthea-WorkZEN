@@ -22,22 +22,33 @@ interface UpdateLeaveStatusInput {
 export const applyForLeave = async (input: CreateLeaveInput) => {
   const { userId, leaveType, startDate, endDate, reason } = input;
 
+  // Convert string dates to Date objects if they're strings
+  const startDateObj = startDate instanceof Date ? startDate : new Date(startDate);
+  const endDateObj = endDate instanceof Date ? endDate : new Date(endDate);
+
+  // Set time to start of day to avoid timezone issues
+  startDateObj.setHours(0, 0, 0, 0);
+  endDateObj.setHours(0, 0, 0, 0);
+
   // Validate dates
-  if (endDate < startDate) {
+  if (endDateObj < startDateObj) {
     throw new Error('End date must be after start date');
   }
 
   // Check for overlapping leaves
+  // Two date ranges overlap if: start1 <= end2 AND end1 >= start2
   const overlappingLeaves = await prisma.leave.findMany({
     where: {
       userId,
       status: {
-        in: ['pending', 'approved'],
+        in: [LeaveStatus.pending, LeaveStatus.approved],
       },
-      OR: [
+      AND: [
         {
-          startDate: { lte: endDate },
-          endDate: { gte: startDate },
+          startDate: { lte: endDateObj },
+        },
+        {
+          endDate: { gte: startDateObj },
         },
       ],
     },
@@ -52,10 +63,10 @@ export const applyForLeave = async (input: CreateLeaveInput) => {
     data: {
       userId,
       leaveType,
-      startDate,
-      endDate,
+      startDate: startDateObj,
+      endDate: endDateObj,
       reason,
-      status: 'pending',
+      status: LeaveStatus.pending,
     },
     include: {
       user: {
@@ -127,7 +138,7 @@ export const getPendingLeaves = async (page: number = 1, limit: number = 10) => 
   const [leaves, total] = await Promise.all([
     prisma.leave.findMany({
       where: {
-        status: 'pending',
+        status: LeaveStatus.pending,
       },
       skip,
       take: limit,
@@ -148,7 +159,7 @@ export const getPendingLeaves = async (page: number = 1, limit: number = 10) => 
     }),
     prisma.leave.count({
       where: {
-        status: 'pending',
+        status: LeaveStatus.pending,
       },
     }),
   ]);
@@ -212,7 +223,7 @@ export const updateLeaveStatus = async (input: UpdateLeaveStatusInput) => {
     throw new Error('Leave not found');
   }
 
-  if (leave.status !== 'pending') {
+  if (leave.status !== LeaveStatus.pending) {
     throw new Error('Leave request has already been processed');
   }
 
@@ -221,7 +232,7 @@ export const updateLeaveStatus = async (input: UpdateLeaveStatusInput) => {
     where: { id: leaveId },
     data: {
       status,
-      approvedBy: status === 'approved' ? approvedBy : null,
+      approvedBy: status === LeaveStatus.approved ? approvedBy : null,
     },
     include: {
       user: {
@@ -242,7 +253,7 @@ export const updateLeaveStatus = async (input: UpdateLeaveStatusInput) => {
   });
 
   // If approved, mark attendance as leave for those dates
-  if (status === 'approved') {
+  if (status === LeaveStatus.approved) {
     const startDate = new Date(leave.startDate);
     const endDate = new Date(leave.endDate);
     const days = getDaysDifference(startDate, endDate);
@@ -329,14 +340,14 @@ export const getLeaveSummary = async (userId: string) => {
   });
 
   const total = leaves.length;
-  const pending = leaves.filter((l) => l.status === 'pending').length;
-  const approved = leaves.filter((l) => l.status === 'approved').length;
-  const rejected = leaves.filter((l) => l.status === 'rejected').length;
+  const pending = leaves.filter((l) => l.status === LeaveStatus.pending).length;
+  const approved = leaves.filter((l) => l.status === LeaveStatus.approved).length;
+  const rejected = leaves.filter((l) => l.status === LeaveStatus.rejected).length;
 
   // Calculate total leave days
   let totalDays = 0;
   leaves.forEach((leave) => {
-    if (leave.status === 'approved') {
+    if (leave.status === LeaveStatus.approved) {
       totalDays += getDaysDifference(leave.startDate, leave.endDate);
     }
   });

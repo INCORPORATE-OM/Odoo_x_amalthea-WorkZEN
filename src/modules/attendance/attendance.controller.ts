@@ -94,7 +94,12 @@ export const getAllEmployeesAttendance = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const date = req.query.date ? new Date(req.query.date as string) : new Date();
+    let date: Date | undefined;
+    if (req.query.date) {
+      // Parse the date string and normalize to start of day
+      date = new Date(req.query.date as string);
+      date.setHours(0, 0, 0, 0);
+    }
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 

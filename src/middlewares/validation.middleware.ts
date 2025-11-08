@@ -8,11 +8,24 @@ import { sendError } from '../utils/response';
 export const validate = (schema: ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      schema.parse({
+      // Parse and get the transformed values
+      const result = schema.parse({
         body: req.body,
         query: req.query,
         params: req.params,
       });
+      
+      // Update req.body, req.query, and req.params with transformed values
+      if (result.body) {
+        req.body = result.body;
+      }
+      if (result.query) {
+        req.query = result.query;
+      }
+      if (result.params) {
+        req.params = result.params;
+      }
+      
       next();
     } catch (error) {
       if (error instanceof ZodError) {
