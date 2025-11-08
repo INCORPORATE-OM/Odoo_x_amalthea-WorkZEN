@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  employee
+  hr_officer
+  payroll_officer
+}
+
+enum AttendanceStatus {
+  present
+  absent
+  leave
+  half_day
+}
+
+enum LeaveStatus {
+  pending
+  approved
+  rejected
+}
+
+enum LeaveType {
+  casual
+  sick
+  annual
+  unpaid
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  role        Role     @default(employee)
+  phone       String?
+  department  String?
+  designation String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  attendances Attendance[]
+  leaves      Leave[]
+  payrolls    Payroll[]
+  approvedLeaves Leave[] @relation("ApprovedBy")
+  generatedPayrolls Payroll[] @relation("GeneratedBy")
+
+  @@map("users")
+}
+
+model Attendance {
+  id       String           @id @default(uuid())
+  userId   String
+  date     DateTime         @db.Date
+  checkIn  DateTime?
+  checkOut DateTime?
+  status   AttendanceStatus @default(present)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("attendances")
+}
+
+model Leave {
+  id         String      @id @default(uuid())
+  userId     String
+  leaveType  LeaveType
+  startDate  DateTime    @db.Date
+  endDate    DateTime    @db.Date
+  status     LeaveStatus @default(pending)
+  approvedBy String?
+  reason     String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  // Relations
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  approver   User?       @relation("ApprovedBy", fields: [approvedBy], references: [id])
+
+  @@map("leaves")
+}
+
+model Payroll {
+  id            String   @id @default(uuid())
+  userId        String
+  month         Int      // 1-12
+  year          Int
+  basicSalary   Float
+  hra           Float    @default(0)
+  allowances    Float    @default(0)
+  deductions    Float    @default(0) // PF + Professional Tax
+  netPay        Float
+  generatedBy   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generator     User     @relation("GeneratedBy", fields: [generatedBy], references: [id])
+
+  @@unique([userId, month, year])
+  @@map("payrolls")
+}
+
