@@ -1,237 +1,73 @@
-# WorkZen HRMS - Backend API
+# Welcome to your Lovable project
 
-A comprehensive Human Resource Management System backend built with Node.js, Express, TypeScript, and PostgreSQL.
+## Project info
 
-## 🚀 Tech Stack
+**URL**: https://lovable.dev/projects/5eec74fb-373b-4fe1-a337-606ad33b34fc
 
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Language**: TypeScript
-- **Database**: PostgreSQL
-- **ORM**: Prisma
-- **Authentication**: JWT (Access + Refresh tokens)
-- **Password Hashing**: bcrypt
-- **Validation**: Zod
-- **Containerization**: Docker + Docker Compose
+## How can I edit this code?
 
-## 📁 Project Structure
+There are several ways of editing your application.
 
-```
-workzen-hrms/
-├── src/
-│   ├── config/          # Configuration files
-│   ├── database/         # Database setup
-│   ├── modules/          # Feature modules
-│   │   ├── auth/        # Authentication
-│   │   ├── users/       # User management
-│   │   ├── attendance/  # Attendance tracking
-│   │   ├── leave/       # Leave management
-│   │   ├── payroll/     # Payroll management
-│   │   └── dashboard/   # Dashboard APIs
-│   ├── middlewares/     # Express middlewares
-│   ├── utils/           # Utility functions
-│   ├── routes/          # Route definitions
-│   ├── app.ts           # Express app setup
-│   └── server.ts        # Server entry point
-├── prisma/
-│   ├── schema.prisma    # Database schema
-│   └── seed.ts          # Seed script
-├── docker-compose.yml   # Docker services
-├── Dockerfile          # Docker image
-└── .env.example        # Environment variables template
+**Use Lovable**
+
+Simply visit the [Lovable Project](https://lovable.dev/projects/5eec74fb-373b-4fe1-a337-606ad33b34fc) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-## 🛠️ Setup Instructions
+**Edit a file directly in GitHub**
 
-### Prerequisites
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-- Node.js (v20 or higher)
-- Docker and Docker Compose
-- npm or yarn
+**Use GitHub Codespaces**
 
-### Installation
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd hrms
-   ```
+## What technologies are used for this project?
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+This project is built with:
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` and update the values as needed.
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-4. **Start Docker services**
-   ```bash
-   docker-compose up -d
-   ```
+## How can I deploy this project?
 
-5. **Run Prisma migrations**
-   ```bash
-   npm run prisma:migrate
-   ```
+Simply open [Lovable](https://lovable.dev/projects/5eec74fb-373b-4fe1-a337-606ad33b34fc) and click on Share -> Publish.
 
-6. **Generate Prisma Client**
-   ```bash
-   npm run prisma:generate
-   ```
+## Can I connect a custom domain to my Lovable project?
 
-7. **Seed the database**
-   ```bash
-   npm run prisma:seed
-   ```
+Yes, you can!
 
-8. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-The server will start on `http://localhost:3000`
-
-## 📊 Database Access
-
-- **PostgreSQL**: `localhost:5432`
-- **Adminer**: `http://localhost:8080`
-  - System: PostgreSQL
-  - Server: postgres
-  - Username: workzen_user
-  - Password: workzen_password
-  - Database: workzen_db
-
-## 🔐 Default Credentials
-
-After seeding, you can use these credentials:
-
-- **Admin**: `admin@workzen.com` / `Admin@123`
-- **HR Officer**: `hr@workzen.com` / `HR@123`
-- **Payroll Officer**: `payroll@workzen.com` / `Payroll@123`
-- **Employee**: `employee@workzen.com` / `Employee@123`
-
-## 📡 API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `POST /api/auth/refresh` - Refresh access token
-- `GET /api/auth/profile` - Get current user profile
-
-### Users
-- `GET /api/users` - Get all users (Admin/HR)
-- `GET /api/users/:userId` - Get user by ID
-- `POST /api/users` - Create user (Admin)
-- `PUT /api/users/:userId` - Update user
-- `DELETE /api/users/:userId` - Delete user (Admin)
-
-### Attendance
-- `POST /api/attendance/check-in` - Mark check-in
-- `POST /api/attendance/check-out` - Mark check-out
-- `GET /api/attendance/daily` - Get daily attendance
-- `GET /api/attendance/monthly/:userId?` - Get monthly logs
-- `GET /api/attendance/summary/:userId?` - Get attendance summary
-- `GET /api/attendance/all` - Get all employees attendance (HR/Admin)
-
-### Leaves
-- `POST /api/leaves/apply` - Apply for leave
-- `GET /api/leaves/user/:userId?` - Get user's leaves
-- `GET /api/leaves/pending` - Get pending leaves (Payroll/Admin)
-- `GET /api/leaves/:leaveId` - Get leave by ID
-- `PATCH /api/leaves/:leaveId/status` - Approve/reject leave (Payroll/Admin)
-- `GET /api/leaves/summary/:userId?` - Get leave summary
-- `GET /api/leaves/history` - Get leave history (HR/Admin)
-
-### Payroll
-- `POST /api/payroll/generate` - Generate payroll (Payroll/Admin)
-- `GET /api/payroll/all` - Get all payrolls (Payroll/Admin)
-- `GET /api/payroll/user/:userId?` - Get user's payrolls
-- `GET /api/payroll/user/:userId?/month` - Get payroll by month
-- `GET /api/payroll/:payrollId` - Get payroll by ID
-- `GET /api/payroll/summary` - Get payroll summary (Payroll/Admin)
-
-### Dashboard
-- `GET /api/dashboard/attendance` - Attendance summary
-- `GET /api/dashboard/leaves` - Leaves summary
-- `GET /api/dashboard/payroll` - Payroll summary
-- `GET /api/dashboard/employee/:userId?` - Employee dashboard
-- `GET /api/dashboard/organization` - Organization metrics (HR/Admin)
-
-## 🔒 Role-Based Access Control
-
-### Admin
-- Full access to all modules
-- Can manage users and roles
-- Can access all data
-
-### HR Officer
-- Manage employee profiles
-- Monitor attendance
-- Allocate leaves
-- Cannot access payroll
-
-### Payroll Officer
-- Approve/reject leaves
-- Generate payslips
-- Manage salary information
-- Access attendance data
-- Cannot modify user data
-
-### Employee
-- Apply for leave
-- View own attendance
-- View own payroll
-- View own performance
-- Cannot access other employees' data
-
-## 💰 Salary Calculation
-
-- **PF**: 12% of basic salary
-- **Professional Tax**: ₹200 (fixed)
-- **Net Pay**: Basic + HRA + Allowances - Deductions
-
-## 🐳 Docker Commands
-
-```bash
-# Start services
-docker-compose up -d
-
-# Stop services
-docker-compose down
-
-# View logs
-docker-compose logs -f
-
-# Rebuild containers
-docker-compose up -d --build
-```
-
-## 📝 Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm run prisma:generate` - Generate Prisma Client
-- `npm run prisma:migrate` - Run migrations
-- `npm run prisma:seed` - Seed database
-- `npm run prisma:studio` - Open Prisma Studio
-
-## 🧪 Testing
-
-API endpoints can be tested using tools like:
-- Postman
-- Insomnia
-- Thunder Client (VS Code extension)
-
-## 📄 License
-
-ISC
-
-## 👥 Support
-
-For issues and questions, please contact the development team.
-
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
